@@ -72,9 +72,9 @@ To use this component in your ESP-IDF project, follow these steps:
     ```c
     clear_frame_buffer(handle);
 
-    draw_line(handle, 0, 0, 20, 20);
+    draw_line(handle, 0, 0, 20, 20, true);
 
-    set_pixel(handle, 30, 30);
+    set_pixel(handle, 30, 30, true);
     ```
 
 6. Build and flash your ESP-IDF project to see the output on the PCD8544 display.
