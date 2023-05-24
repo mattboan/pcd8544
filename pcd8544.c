@@ -92,6 +92,7 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
     int8_t err = dx + dy; 
     int16_t err2;   // Have to use int16_t because:  err2_max = 2 * (dx_max + dy_max) = 2 * (84 + 48) = 2 * 132 = 264     
 
+
     while (1) {
         set_pixel(handle, x0,y0, color);
         
