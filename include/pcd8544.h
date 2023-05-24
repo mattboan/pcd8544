@@ -56,6 +56,8 @@
 #define FRAME_BUFFER_SIZE 504
 #define QUEUE_SIZE 32
 
+
+
 /**
  * @brief Delays execution for the specified number of milliseconds.
  * 
@@ -112,7 +114,7 @@ void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color);
 
 
 /**
- * @brief Draws a line between two points.
+ * @brief Draws a line between two points. Using Bresenham's Line Algorithm
  *
  * @param handle The SPI device handle for the LCD.
  * @param x0 The x-coordinate of the starting point.
