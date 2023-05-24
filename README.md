@@ -6,6 +6,8 @@ Currently a work in progress, but we can draw lines, set pixels, and started the
 
 After that I will start working on drawing bitmaps and characters.
 
+[See more.](https://www.voidstudios.com.au/projects/3)
+
 Check out the splash screen:
 
 ![Example Image](https://www.voidstudios.com.au/_next/image?url=https%3A%2F%2Fxovjhtjkytzursvsbvbp.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fheader_img%2Fproject-b89c1cc6-cffa-44ba-a650-d4ba90e11770.undefined&w=1080&q=75)
@@ -21,7 +23,7 @@ To use this component in your ESP-IDF project, follow these steps:
     ```cmake
     idf_component_register(SRCS "<your-main and other files>.c"
                        INCLUDE_DIRS "."
-                       REQUIRES pcd8544
+                       REQUIRES pcd8544)
     ```
 
 3. In your application code, include the PCD8544 header file:
