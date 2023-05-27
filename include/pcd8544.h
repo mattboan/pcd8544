@@ -108,7 +108,7 @@ void clear_frame_buffer(spi_device_handle_t handle);
  * @param handle The SPI device handle for the LCD.
  * @param x The x-coordinate of the pixel.
  * @param y The y-coordinate of the pixel.
- * @param color The color of the pixel (true for white, false for black).
+ * @param color The color of the pixel (true = black, false = white)
  */
 void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color);
 
@@ -121,10 +121,22 @@ void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color);
  * @param y0 The y-coordinate of the starting point.
  * @param x1 The x-coordinate of the ending point.
  * @param y1 The y-coordinate of the ending point.
- * @param color The color of the line (true for white, false for black).
+ * @param color The color of the line (true = black, false = white)
  */
 void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
 
+
+/**
+ * @brief Draws all the octants for the circle.
+ * 
+ * @param handle The SPI device handle for the LCD 
+ * @param xc TODO
+ * @param yc TODO
+ * @param x TODO
+ * @param y  TODO
+ * @param color The color of the line (true = black, false = white)
+ */
+void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int y, bool color);
 
 /**
  * @brief Draws a circle with the specified center, radius, and color.
@@ -133,9 +145,9 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
  * @param x0 The x-coordinate of the center of the circle.
  * @param y0 The y-coordinate of the center of the circle.
  * @param r The radius of the circle.
- * @param color The color of the circle (true for white, false for black).
+ * @param color The color of the circle (true = black, false = white)
  */
-void draw_circle(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t r, bool color);
+void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color);
 
 
 /**
@@ -146,7 +158,7 @@ void draw_circle(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t r, 
  * @param y0 The y-coordinate of the top-left corner of the rectangle.
  * @param x1 The x-coordinate of the bottom-right corner of the rectangle.
  * @param y1 The y-coordinate of the bottom-right corner of the rectangle.
- * @param color The color of the rectangle (true for white, false for black).
+ * @param color The color of the rectangle (true = black, false = white)
  */
 void draw_rect(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
 

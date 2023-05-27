@@ -117,10 +117,62 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
 
 }
 
-// Draw a circle
-void draw_circle(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t r, bool color) {
+void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int y, bool color) {
+    set_pixel(handle, xc+x, yc+y, color);  
+    set_pixel(handle, xc-x, yc+y, color);
+    set_pixel(handle, xc+x, yc-y, color);
+    set_pixel(handle, xc-x, yc-y, color);
+    set_pixel(handle, xc+y, yc+x, color);
+    set_pixel(handle, xc-y, yc+x, color);
+    set_pixel(handle, xc+y, yc-x, color);
+    set_pixel(handle, xc-y, yc-x, color);
+    draw_frame_buffer(handle);
+}
 
-    // Needs work...
+// Draw a circle
+void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color) {
+    int x = -r, y = 0, err = 2-2*r; /* II. Quadrant */ 
+    do {
+        set_pixel(handle, xc-x, yc+y, color); /*   I. Quadrant */
+        set_pixel(handle, xc-y, yc-x, color); /*  II. Quadrant */
+        set_pixel(handle, xc+x, yc-y, color); /* III. Quadrant */
+        set_pixel(handle, xc+y, yc+x, color); /*  IV. Quadrant */
+        draw_frame_buffer(handle);
+    delay(500);
+        r = err;
+        if (r >  x) err += ++x*2+1; /* e_xy+e_x > 0 */
+        if (r <= y) err += ++y*2+1; /* e_xy+e_y < 0 */
+    } while (x < 0);
+
+    // int x = 0, y = r;
+    // int d = 3 - 2 * r;
+
+    // draw_circle_octants(handle, xc, yc, x, y, color);
+    // delay(500);
+
+    // while (y >= x)
+    // {
+    //     // for each pixel we will
+    //     // draw all eight pixels
+         
+    //     x++;
+ 
+    //     // check for decision parameter
+    //     // and correspondingly
+    //     // update d, x, y
+    //     if (d > 0)
+    //     {
+    //         y--;
+    //         // d = d + 4 * (x - y) + 10;
+    //         d = d + 4 * (x - y) + 5;
+    //     }
+    //     else {
+    //         d = d + 4 * x + 3;
+    //         // d = d + 4 * x + 6;
+    //     }
+    //     draw_circle_octants(handle, xc, yc, x, y, color);
+    //     delay(500);
+    // }
 }
 
 // Draw a rectangle
