@@ -132,15 +132,22 @@ void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int 
 
 // Draw a circle
 void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color) {
-    int x = -r, y = 0, err = 2-2*r; /* II. Quadrant */ 
+    int x = -r;
+    int y = 0; 
+    int err = 2 - 2 * r; /* II. Quadrant */ 
+    
     do {
+        // Draw the 4 quadrants
         set_pixel(handle, xc-x, yc+y, color); /*   I. Quadrant */
         set_pixel(handle, xc-y, yc-x, color); /*  II. Quadrant */
         set_pixel(handle, xc+x, yc-y, color); /* III. Quadrant */
         set_pixel(handle, xc+y, yc+x, color); /*  IV. Quadrant */
         draw_frame_buffer(handle);
-    delay(500);
+
+        delay(500); // Let's us see how the circle is being drawn
+        
         r = err;
+        
         if (r >  x) err += ++x*2+1; /* e_xy+e_x > 0 */
         if (r <= y) err += ++y*2+1; /* e_xy+e_y < 0 */
     } while (x < 0);
