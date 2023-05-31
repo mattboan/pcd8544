@@ -131,12 +131,13 @@ void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int 
 }
 
 // Draw a circle
-void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color) {
+void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color, int c, int c2) {
     int x = -r;
     int y = 0; 
     int err = 2 - 2 * r; /* II. Quadrant */ 
     
     do {
+        
         // Draw the 4 quadrants
         set_pixel(handle, xc-x, yc+y, color); /*   I. Quadrant */
         set_pixel(handle, xc-y, yc-x, color); /*  II. Quadrant */
@@ -144,43 +145,20 @@ void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color) 
         set_pixel(handle, xc+y, yc+x, color); /*  IV. Quadrant */
         draw_frame_buffer(handle);
 
-        delay(500); // Let's us see how the circle is being drawn
+        delay(100); // Let's us see how the circle is being drawn
         
         r = err;
         
-        if (r >  x) err += ++x*2+1; /* e_xy+e_x > 0 */
-        if (r <= y) err += ++y*2+1; /* e_xy+e_y < 0 */
+        if (r >  x){
+            ++x; 
+            err = err + x * 2 + 1;   
+        }
+
+        if (r <= y) {
+            ++y;
+            err = err + y * 2 + 1;
+        }
     } while (x < 0);
-
-    // int x = 0, y = r;
-    // int d = 3 - 2 * r;
-
-    // draw_circle_octants(handle, xc, yc, x, y, color);
-    // delay(500);
-
-    // while (y >= x)
-    // {
-    //     // for each pixel we will
-    //     // draw all eight pixels
-         
-    //     x++;
- 
-    //     // check for decision parameter
-    //     // and correspondingly
-    //     // update d, x, y
-    //     if (d > 0)
-    //     {
-    //         y--;
-    //         // d = d + 4 * (x - y) + 10;
-    //         d = d + 4 * (x - y) + 5;
-    //     }
-    //     else {
-    //         d = d + 4 * x + 3;
-    //         // d = d + 4 * x + 6;
-    //     }
-    //     draw_circle_octants(handle, xc, yc, x, y, color);
-    //     delay(500);
-    // }
 }
 
 // Draw a rectangle

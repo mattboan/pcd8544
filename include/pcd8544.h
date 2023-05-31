@@ -147,7 +147,7 @@ void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int 
  * @param r The radius of the circle.
  * @param color The color of the circle (true = black, false = white)
  */
-void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color);
+void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color, int c, int c2);
 
 
 /**
