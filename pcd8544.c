@@ -76,6 +76,9 @@ void clear_frame_buffer(spi_device_handle_t handle) {
 
 // Draw a pixel
 void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color) {
+    // Check if out of bounds
+    if (x >= LCD_WIDTH || y >= LCD_HEIGHT) return;
+
     if (color)
         buffer[x + (y / 8) * LCD_WIDTH] |= 1 << (y % 8);
     else
@@ -90,8 +93,6 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
     int8_t sy = y0 < y1 ? 1 : -1; 
     int8_t err = dx + dy; 
     int16_t err2;   // Have to use int16_t because:  err2_max = 2 * (dx_max + dy_max) = 2 * (84 + 48) = 2 * 132 = 264     
-
-
 
 
     while (1) {
@@ -118,34 +119,18 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
 
 }
 
-void draw_circle_octants(spi_device_handle_t handle, int xc, int yc, int x, int y, bool color) {
-    set_pixel(handle, xc+x, yc+y, color);  
-    set_pixel(handle, xc-x, yc+y, color);
-    set_pixel(handle, xc+x, yc-y, color);
-    set_pixel(handle, xc-x, yc-y, color);
-    set_pixel(handle, xc+y, yc+x, color);
-    set_pixel(handle, xc-y, yc+x, color);
-    set_pixel(handle, xc+y, yc-x, color);
-    set_pixel(handle, xc-y, yc-x, color);
-    draw_frame_buffer(handle);
-}
-
 // Draw a circle
-void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color, int c, int c2) {
+void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color) {
     int x = -r;
     int y = 0; 
     int err = 2 - 2 * r; /* II. Quadrant */ 
     
     do {
-        
         // Draw the 4 quadrants
         set_pixel(handle, xc-x, yc+y, color); /*   I. Quadrant */
         set_pixel(handle, xc-y, yc-x, color); /*  II. Quadrant */
         set_pixel(handle, xc+x, yc-y, color); /* III. Quadrant */
         set_pixel(handle, xc+y, yc+x, color); /*  IV. Quadrant */
-        draw_frame_buffer(handle);
-
-        delay(100); // Let's us see how the circle is being drawn
         
         r = err;
         
@@ -171,11 +156,68 @@ void draw_rect(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
 
 // Drwa the frame buffer
 void draw_frame_buffer(spi_device_handle_t handle) {
-
     send_command(handle, PCD8544_SETYADDR | 0);
 
     // So there are 6 rows and 84 columns
     for (int page = 0; page < (6 * 84); page++) {
         send_data(handle, buffer[page]);
+    }
+}
+
+// Draw a bitmap
+void draw_bitmap(spi_device_handle_t handle, int x, int y, int w, int h, uint8_t bitmap[], bool color) {
+    int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
+    uint8_t b = 0;
+
+    // Let's say J is 40 pixels
+    for (int16_t j = 0; j < h; j++, y++) {
+        
+        for (int16_t i = 0; i < w; i++) {
+
+            if (i & 7)
+                b <<= 1;
+            else
+                b = bitmap[j * byteWidth + i / 8];
+
+            // TODO: Look into that 
+            if (b & 0x80) {
+                set_pixel(handle, x + i, y, color);
+            } 
+        }
+    }
+}
+
+
+// Draw a character to the screen
+void draw_char(spi_device_handle_t handle, int x, int y, char c, bool color) {
+    // Check if out of bounds
+    if (x >= LCD_WIDTH || y >= LCD_HEIGHT) return;
+
+    // Check if character is out of bounds
+    if ((x + 5) >= LCD_WIDTH || (y + 7) >= LCD_HEIGHT) return;
+
+    // Check if character is printable
+    if (c < 32 || c > 127) return;
+
+    for (int i = 0; i < 5; i++) {
+        int line = font[c - 32][i];
+
+        for (int j = 0; j < 7; j++) {
+            set_pixel(handle, x + i, y + j, line & (1 << j));
+        }
+    }
+}
+
+
+void write_string(spi_device_handle_t handle, int* cursor, char* text, bool color, bool d) {    
+    for (int i = 0; i < strlen(text); i++) {
+        draw_char(handle, *cursor, 0, text[i], color);
+
+        if (d) {
+            draw_frame_buffer(handle);
+            delay(200);
+        }
+
+        *cursor += 6;
     }
 }
