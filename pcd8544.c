@@ -250,13 +250,17 @@ void draw_char(int x, int y, char c, bool color) {
 void write_string(char * text, bool color, int d) {    
     for (int i = 0; i < strlen(text); i++) {
         draw_char(x_cursor, y_cursor, text[i], color);
+        x_cursor += 6;
 
         if (d > 0) {
             draw_frame_buffer();
             delay(d);
         }
 
-        x_cursor += 6;
+        if (text[i] == '\n') {
+            x_cursor = 0;
+            y_cursor += 8;
+        }
 
         if (x_cursor >= LCD_WIDTH) {
             x_cursor = 0;
@@ -269,6 +273,8 @@ void write_string(char * text, bool color, int d) {
             x_cursor = 0;
             draw_frame_buffer();
         }
+
+       
 
         ESP_LOGI(PCD_TAG, "x_cursor: %d - y_cursor: %d.", x_cursor, y_cursor);
     }
