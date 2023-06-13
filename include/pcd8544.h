@@ -156,6 +156,8 @@ static uint8_t font[96][5] = {
 	{ 0x08, 0x1C, 0x2A, 0x08, 0x08 } // <-
 };
 
+// SPI Device handle
+
 
 /**
  * @brief Delays execution for the specified number of milliseconds.
@@ -166,13 +168,17 @@ static uint8_t font[96][5] = {
  */
 void delay(int ms);
 
+/**
+ * @brief Inits the LCD
+ */
+void init_pcd8544();
 
 /**
  * @brief Initializes the SPI interface for the LCD.
  *
  * @return The SPI device handle for the LCD.
  */
-spi_device_handle_t init_lcd();
+spi_device_handle_t init_spi();
 
 
 /**
@@ -181,7 +187,7 @@ spi_device_handle_t init_lcd();
  * @param handle The SPI device handle for the LCD.
  * @param command The command to be sent.
  */
-void send_command(spi_device_handle_t handle, uint8_t command);
+void send_command(uint8_t command);
 
 
 /**
@@ -190,7 +196,7 @@ void send_command(spi_device_handle_t handle, uint8_t command);
  * @param handle The SPI device handle for the LCD.
  * @param data The data to be sent.
  */
-void send_data(spi_device_handle_t handle, uint8_t data);
+void send_data(uint8_t data);
 
 
 /**
@@ -198,7 +204,7 @@ void send_data(spi_device_handle_t handle, uint8_t data);
  *
  * @param handle The SPI device handle for the LCD.
  */
-void clear_frame_buffer(spi_device_handle_t handle);
+void clear_frame_buffer();
 
 
 /**
@@ -209,7 +215,7 @@ void clear_frame_buffer(spi_device_handle_t handle);
  * @param y The y-coordinate of the pixel.
  * @param color The color of the pixel (true = black, false = white)
  */
-void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color);
+void set_pixel(uint8_t x, uint8_t y, bool color);
 
 
 /**
@@ -222,7 +228,7 @@ void set_pixel(spi_device_handle_t handle, uint8_t x, uint8_t y, bool color);
  * @param y1 The y-coordinate of the ending point.
  * @param color The color of the line (true = black, false = white)
  */
-void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
+void draw_line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
 
 /**
  * @brief Draws a circle with the specified center, radius, and color.
@@ -233,7 +239,7 @@ void draw_line(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
  * @param r The radius of the circle.
  * @param color The color of the circle (true = black, false = white)
  */
-void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color);
+void draw_circle(int xc, int yc, int r, bool color);
 
 /**
  * @brief Draws a rectangle with the specified coordinates and color.
@@ -245,7 +251,7 @@ void draw_circle(spi_device_handle_t handle, int xc, int yc, int r, bool color);
  * @param y1 The y-coordinate of the bottom-right corner of the rectangle.
  * @param color The color of the rectangle (true = black, false = white)
  */
-void draw_rect(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
+void draw_rect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color);
 
 
 /**
@@ -253,14 +259,14 @@ void draw_rect(spi_device_handle_t handle, uint8_t x0, uint8_t y0, uint8_t x1, u
  *
  * @param handle The SPI device handle for the LCD.
  */
-void draw_frame_buffer(spi_device_handle_t handle);
+void draw_frame_buffer();
 
 
 /**
  * @brief Draw a bitmap to the screen
  * 
  */
-void draw_bitmap(spi_device_handle_t handle, int x, int y, int w, int h, uint8_t bitmap[], bool color);
+void draw_bitmap(int x, int y, int w, int h, uint8_t bitmap[], bool color);
 
 /**
  * @brief Draw a character to the screen
@@ -271,7 +277,7 @@ void draw_bitmap(spi_device_handle_t handle, int x, int y, int w, int h, uint8_t
  * @param c 
  * @param color 
  */
-void draw_char(spi_device_handle_t handle, int x, int y, char c, bool color);
+void draw_char(int x, int y, char c, bool color);
 
 /**
  * @brief Write a string to the screen
@@ -282,4 +288,4 @@ void draw_char(spi_device_handle_t handle, int x, int y, char c, bool color);
  * @param color 
  * @param d For delaying the output old school terminal output
  */
-void write_string(spi_device_handle_t handle, int*cursor, char* string, bool color, bool d);
+void write_string(int*cursor, char* string, bool color, bool d);
