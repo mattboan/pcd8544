@@ -258,14 +258,14 @@ void write_string(char * text, bool color, int d) {
 
         x_cursor += 6;
 
-        if (x_cursor > LCD_WIDTH - 6) {
+        if (x_cursor >= LCD_WIDTH) {
             x_cursor = 0;
-            y_cursor += 10;
+            y_cursor += 8;
         }
 
-        if (y_cursor > LCD_HEIGHT) {
+        if (y_cursor >= LCD_HEIGHT) {
             scroll_y(1);
-            y_cursor -= 10;
+            y_cursor -= 8;
             x_cursor = 0;
             draw_frame_buffer();
         }
