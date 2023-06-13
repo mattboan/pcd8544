@@ -57,6 +57,7 @@
 
 #define CHAR_OFFSET 32
 
+// 5 x 9
 static uint8_t font[96][5] = {
 	{ 0x00, 0x00, 0x00, 0x00, 0x00 },// (space)
 	{ 0x00, 0x00, 0x5F, 0x00, 0x00 },// !
@@ -288,4 +289,11 @@ void draw_char(int x, int y, char c, bool color);
  * @param color 
  * @param d For delaying the output old school terminal output
  */
-void write_string(int*cursor, char* string, bool color, bool d);
+void write_string(char* string, bool color, int d);
+
+/**
+ * @brief Scroll by the number of pages
+ * 
+ * @param pages 
+ */
+void scroll_y(uint8_t pages);

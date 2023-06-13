@@ -8,7 +8,8 @@ uint8_t buffer [LCD_WIDTH * LCD_HEIGHT / 8] = {
 };
 
 spi_device_handle_t handle;
-
+int x_cursor = 0;
+int y_cursor = 0;
 
 // Wait for x ms
 void delay(int ms) {
@@ -17,6 +18,8 @@ void delay(int ms) {
 
 // Init the LCD
 void init_pcd8544() {
+    esp_log_level_set(PCD_TAG, ESP_LOG_INFO);
+
     // Init SPI
     handle = init_spi();
 
@@ -206,7 +209,6 @@ void draw_bitmap(int x, int y, int w, int h, uint8_t bitmap[], bool color) {
     int16_t byteWidth = (w + 7) / 8; // Bitmap scanline pad = whole byte
     uint8_t b = 0;
 
-    // Let's say J is 40 pixels
     for (int16_t j = 0; j < h; j++, y++) {
         
         for (int16_t i = 0; i < w; i++) {
@@ -216,7 +218,6 @@ void draw_bitmap(int x, int y, int w, int h, uint8_t bitmap[], bool color) {
             else
                 b = bitmap[j * byteWidth + i / 8];
 
-            // TODO: Look into that 
             if (b & 0x80) {
                 set_pixel(x + i, y, color);
             } 
@@ -246,15 +247,42 @@ void draw_char(int x, int y, char c, bool color) {
 }
 
 
-void write_string(int* cursor, char* text, bool color, bool d) {    
+void write_string(char * text, bool color, int d) {    
     for (int i = 0; i < strlen(text); i++) {
-        draw_char(*cursor, 0, text[i], color);
+        draw_char(x_cursor, y_cursor, text[i], color);
 
-        if (d) {
+        if (d > 0) {
             draw_frame_buffer();
-            delay(200);
+            delay(d);
         }
 
-        *cursor += 6;
+        x_cursor += 6;
+
+        if (x_cursor > LCD_WIDTH - 6) {
+            x_cursor = 0;
+            y_cursor += 10;
+        }
+
+        if (y_cursor > LCD_HEIGHT) {
+            scroll_y(1);
+            y_cursor -= 10;
+            x_cursor = 0;
+            draw_frame_buffer();
+        }
+
+        ESP_LOGI(PCD_TAG, "x_cursor: %d - y_cursor: %d.", x_cursor, y_cursor);
+    }
+}
+
+
+void scroll_y(uint8_t pages) {
+    // Loop over the pages from start to end -> end defined as height (6 pages) - pages NOTE: A page is 8 bits
+    for (int i = 0; i < (LCD_WIDTH * (LCD_HEIGHT / 8 - pages)); i++) {
+        buffer[i] = buffer[i + LCD_WIDTH];
+    }
+
+    // For the remainding old pages, we can set that too 0 or off -> This wont work with colouring.
+    for (int i = (LCD_WIDTH * (LCD_HEIGHT / 8 - pages)); i < LCD_WIDTH * LCD_HEIGHT / 8; i++) {
+        buffer[i] = 0x00;
     }
 }
