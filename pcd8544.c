@@ -33,9 +33,7 @@ void init_pcd8544() {
     gpio_set_level(RESET, 1);
 
     // Set the contrast
-    send_command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
-    send_command(PCD8544_SETVOP | 30); // Contrast
-    send_command(PCD8544_FUNCTIONSET);
+    set_contrast(30);
 
     // Set the Voltage Bias
     send_command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
@@ -291,4 +289,11 @@ void scroll_y(uint8_t pages) {
     for (int i = (LCD_WIDTH * (LCD_HEIGHT / 8 - pages)); i < LCD_WIDTH * LCD_HEIGHT / 8; i++) {
         buffer[i] = 0x00;
     }
+}
+
+void set_contrast(uint8_t contrast) {
+    // Set the contrast
+    send_command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
+    send_command(PCD8544_SETVOP | 30); // Contrast
+    send_command(PCD8544_FUNCTIONSET);
 }

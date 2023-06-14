@@ -292,8 +292,14 @@ void draw_char(int x, int y, char c, bool color);
 void write_string(char* string, bool color, int d);
 
 /**
- * @brief Scroll by the number of pages
+ * @brief Scroll by the number of pages in the y direction
  * 
  * @param pages 
  */
 void scroll_y(uint8_t pages);
+
+/**
+ * @brief Sets the contrast of the LCD
+ * 
+ */
+void set_contrast(uint8_t contrast);
