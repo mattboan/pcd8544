@@ -208,6 +208,7 @@ void send_data(uint8_t data);
 void clear_frame_buffer();
 
 
+
 /**
  * @brief Sets the color of a pixel at the specified coordinates.
  *
@@ -303,3 +304,9 @@ void scroll_y(uint8_t pages);
  * 
  */
 void set_contrast(uint8_t contrast);
+
+/**
+ * @brief Sets the y position of the page
+ * 
+ */
+void set_y_pos(int y);

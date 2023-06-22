@@ -297,3 +297,8 @@ void set_contrast(uint8_t contrast) {
     send_command(PCD8544_SETVOP | 30); // Contrast
     send_command(PCD8544_FUNCTIONSET);
 }
+
+void set_y_pos(int y) {
+    y_cursor = 0;
+    x_cursor = 0;
+}
