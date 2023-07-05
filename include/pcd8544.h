@@ -33,7 +33,7 @@
 // Basic instruction set - Set Y address of RAM, 0 <= Y <= 5 
 #define PCD8544_SETYADDR 0x40 
 // Basic instruction set - Set X address of RAM, 0 <= X <= 83
-#define PCD8544_SETXADDR0x80 
+#define PCD8544_SETXADDR 0x80
 // Extended instruction set - Set temperature coefficient
 #define PCD8544_SETTEMP 0x04 
 // Extended instruction set - Set bias system
@@ -46,10 +46,15 @@
 #define LCD_HEIGHT 48
 
 // Pin Selection
-#define DC 4
-#define RESET 2
-#define MOSI 23
-#define SCLK 18
+// #define DC 4
+// #define RESET 2
+// #define MOSI 23
+// #define SCLK 18
+
+#define DC 2
+#define RESET 3
+#define MOSI 35
+#define SCLK 36
 
 // SPI Config
 #define FRAME_BUFFER_SIZE 504
@@ -310,3 +315,11 @@ void set_contrast(uint8_t contrast);
  * 
  */
 void set_y_pos(int y);
+
+
+/**
+ * @brief Inverts the display
+ * 
+ * @param i True for inverted false for normal mode
+ */
+void invert_display(bool i);

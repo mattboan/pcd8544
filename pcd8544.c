@@ -37,7 +37,7 @@ void init_pcd8544() {
 
     // Set the Voltage Bias
     send_command(PCD8544_FUNCTIONSET | PCD8544_EXTENDEDINSTRUCTION);
-    send_command(PCD8544_SETBIAS | 0x07); // Bias
+    send_command(PCD8544_SETBIAS | 0x03); // Bias
     send_command(PCD8544_FUNCTIONSET);
 
     // Sets the LCD to normal mode
@@ -195,6 +195,7 @@ void draw_rect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool color) {
 // Drwa the frame buffer
 void draw_frame_buffer() {
     send_command(PCD8544_SETYADDR | 0);
+    send_command(PCD8544_SETXADDR | 0);
 
     // So there are 6 rows and 84 columns
     for (int page = 0; page < (6 * 84); page++) {
@@ -259,7 +260,6 @@ void write_string(char * text, bool color, int d) {
             x_cursor = 0;
             y_cursor += 8;
         }
-
         if (text[i] == '\t') {
             x_cursor += 6 * 4;
         }
@@ -301,4 +301,9 @@ void set_contrast(uint8_t contrast) {
 void set_y_pos(int y) {
     y_cursor = 0;
     x_cursor = 0;
+}
+
+void invert_display(bool i) {
+    send_command(PCD8544_FUNCTIONSET);
+	send_command(PCD8544_DISPLAYCONTROL | (i ? PCD8544_DISPLAYINVERTED : PCD8544_DISPLAYNORMAL));
 }
